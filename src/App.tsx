@@ -6,7 +6,6 @@ import { analyzeSentiment } from './apis/azureSentiment';
 import { getLyrics } from './apis/lyricsApi';
 import TopTracksChart from './components/TopTracksChart';
 import Login from './components/Login';
-import Callback from './Callback';
 import './App.css';
 
 const MainApp: React.FC = () => {
@@ -24,7 +23,7 @@ const MainApp: React.FC = () => {
     const _token = hash.access_token;
 
     if (_token) {
-      console.log("we found an access token from the URL");
+      console.log("We found an access token from the URL");
       // If we have a new token, set it and store the expiration time
       const _expires_in = hash.expires_in;
       const expirationTime = new Date().getTime() + _expires_in * 1000;
@@ -33,7 +32,7 @@ const MainApp: React.FC = () => {
       setToken(_token);
     } 
     else if (tokenFromStorage && tokenExpiration) {
-      console.log("we found an access token from local storage");
+      console.log("We found an access token from local storage");
       // Check if the stored token has expired
       const expirationTime = parseInt(tokenExpiration);
       if (new Date().getTime() < expirationTime) {
@@ -45,7 +44,7 @@ const MainApp: React.FC = () => {
       }
     }
     else{
-      console.log("no token found");
+      console.log("No token found");
     }
   }, []);
 
@@ -106,7 +105,6 @@ const MainApp: React.FC = () => {
 const App: React.FC = () => (
   <Router basename="/Mood-Analyzer">
     <Routes>
-      <Route path="/callback" element={<Callback />} />
       <Route path="/" element={<MainApp />} />
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
