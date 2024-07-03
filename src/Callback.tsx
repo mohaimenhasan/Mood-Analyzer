@@ -1,4 +1,3 @@
-// src/Callback.tsx
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getTokenFromUrl } from './apis/spotifyApi';
@@ -14,6 +13,8 @@ const Callback: React.FC = () => {
     if (_token) {
       localStorage.setItem('spotifyToken', _token);
       navigate('/');
+    } else {
+      navigate('/'); // Redirect to home if no token is found
     }
   }, [navigate]);
 
