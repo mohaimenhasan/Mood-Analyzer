@@ -1,6 +1,6 @@
 // src/App.tsx
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { getTokenFromUrl, getUserData, getUserTopTracks, getUserTopArtists } from './apis/spotifyApi';
 import { analyzeSentiment } from './apis/azureSentiment';
 import { getLyrics } from './apis/lyricsApi';
@@ -24,13 +24,16 @@ const MainApp: React.FC = () => {
     const _token = hash.access_token;
 
     if (_token) {
+      console.log("we found an access token from the URL");
       // If we have a new token, set it and store the expiration time
       const _expires_in = hash.expires_in;
       const expirationTime = new Date().getTime() + _expires_in * 1000;
       localStorage.setItem('spotifyToken', _token);
       localStorage.setItem('spotifyTokenExpiration', expirationTime.toString());
       setToken(_token);
-    } else if (tokenFromStorage && tokenExpiration) {
+    } 
+    else if (tokenFromStorage && tokenExpiration) {
+      console.log("we found an access token from local storage");
       // Check if the stored token has expired
       const expirationTime = parseInt(tokenExpiration);
       if (new Date().getTime() < expirationTime) {
@@ -40,6 +43,9 @@ const MainApp: React.FC = () => {
         localStorage.removeItem('spotifyToken');
         localStorage.removeItem('spotifyTokenExpiration');
       }
+    }
+    else{
+      console.log("no token found");
     }
   }, []);
 
@@ -102,7 +108,6 @@ const App: React.FC = () => (
     <Routes>
       <Route path="/callback" element={<Callback />} />
       <Route path="/" element={<MainApp />} />
-      <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   </Router>
 );

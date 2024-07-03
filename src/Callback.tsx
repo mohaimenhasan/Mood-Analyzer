@@ -13,11 +13,13 @@ const Callback: React.FC = () => {
     const _expires_in = hash.expires_in;
 
     if (_token) {
+      console.log('we found an access token from the URL in the callback file');
       const expirationTime = new Date().getTime() + _expires_in * 1000; // _expires_in is in seconds
       localStorage.setItem('spotifyToken', _token);
       localStorage.setItem('spotifyTokenExpiration', expirationTime.toString());
       navigate('/');
     } else {
+      console.log('no token found in the callback file');
       navigate('/'); // Redirect to home if no token is found
     }
   }, [navigate]);
