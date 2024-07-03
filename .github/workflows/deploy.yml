@@ -3,35 +3,44 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main
+      - main  # Adjust this as necessary
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v2
 
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: '14' # Adjust this as necessary
 
-      - name: Install dependencies
+      - name: Install Dependencies
         run: npm install
 
+      - name: Inject Environment Variables
+        run: |
+          echo "REACT_APP_GENIUS_API_TOKEN=${{ secrets.REACT_APP_GENIUS_API_TOKEN }}" >> $GITHUB_ENV
+          echo "REACT_APP_AZURE_SENTIMENT_ENDPOINT=${{ secrets.REACT_APP_AZURE_SENTIMENT_ENDPOINT }}" >> $GITHUB_ENV
+          echo "REACT_APP_AZURE_SENTIMENT_ENDPOINT_KEY=${{ secrets.REACT_APP_AZURE_SENTIMENT_ENDPOINT_KEY }}" >> $GITHUB_ENV
+          echo "REACT_APP_SPOTIFY_CLIENT_ID=${{ secrets.REACT_APP_SPOTIFY_CLIENT_ID }}" >> $GITHUB_ENV
+          echo "REACT_APP_SPOTIFY_REDIRECT_URI=${{ secrets.REACT_APP_SPOTIFY_REDIRECT_URI }}" >> $GITHUB_ENV
+
       - name: Build project
+        run: npm run build
         env:
           REACT_APP_GENIUS_API_TOKEN: ${{ secrets.REACT_APP_GENIUS_API_TOKEN }}
           REACT_APP_AZURE_SENTIMENT_ENDPOINT: ${{ secrets.REACT_APP_AZURE_SENTIMENT_ENDPOINT }}
           REACT_APP_AZURE_SENTIMENT_ENDPOINT_KEY: ${{ secrets.REACT_APP_AZURE_SENTIMENT_ENDPOINT_KEY }}
           REACT_APP_SPOTIFY_CLIENT_ID: ${{ secrets.REACT_APP_SPOTIFY_CLIENT_ID }}
           REACT_APP_SPOTIFY_REDIRECT_URI: ${{ secrets.REACT_APP_SPOTIFY_REDIRECT_URI }}
-        run: npm run build
 
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+        uses: JamesIves/github-pages-deploy-action@4.1.5
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build
+          branch: gh-pages  # Branch to deploy to
+          folder: build  # Folder to deploy
+          token: ${{ secrets.GITHUB_TOKEN }}  # Ensure this is correct
