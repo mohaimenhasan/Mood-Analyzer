@@ -1,12 +1,15 @@
+// src/App.tsx
 import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { getTokenFromUrl, getUserData, getUserTopTracks, getUserTopArtists } from './apis/spotifyApi';
 import { analyzeSentiment } from './apis/azureSentiment';
 import { getLyrics } from './apis/lyricsApi';
 import TopTracksChart from './components/TopTracksChart';
 import Login from './components/Login';
+import Callback from './Callback';
 import './App.css';
 
-const App: React.FC = () => {
+const MainApp: React.FC = () => {
   const [token, setToken] = useState<string | null>(null);
   const [user, setUser] = useState<any>(null);
   const [topTracks, setTopTracks] = useState<any[]>([]);
@@ -14,9 +17,10 @@ const App: React.FC = () => {
   const [moodAnalysis, setMoodAnalysis] = useState<any[]>([]);
 
   useEffect(() => {
+    const tokenFromStorage = localStorage.getItem('spotifyToken');
     const hash = getTokenFromUrl();
     window.location.hash = '';
-    const _token = hash.access_token;
+    const _token = hash.access_token || tokenFromStorage;
 
     if (_token) {
       setToken(_token);
@@ -71,5 +75,14 @@ const App: React.FC = () => {
     </div>
   );
 };
+
+const App: React.FC = () => (
+  <Router basename="/Mood-Analyzer">
+    <Routes>
+      <Route path="/callback" element={<Callback />} />
+      <Route path="/" element={<MainApp />} />
+    </Routes>
+  </Router>
+);
 
 export default App;
