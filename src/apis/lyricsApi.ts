@@ -6,7 +6,17 @@ const corsByPass = 'https://thingproxy.freeboard.io';
 const geniusAPI = 'https://api.genius.com';
 const geniusWebPage = 'https://genius.com';
 
-const getSongName = async (trackName: string, artistName: string) => {
+interface LyricsResponse {
+  lyrics: string;
+  songLanguage: string;
+}
+
+interface GeniusResponse {
+  songPath: string;
+  apiPath: string;
+}
+
+const getSongFromSearch = async (trackName: string, artistName: string): Promise<GeniusResponse> => {
   const response = await axios.get(`${corsByPass}/fetch/${geniusAPI}/search`, {
     headers: {
       Authorization: `Bearer ${geniusToken}`,
@@ -15,33 +25,49 @@ const getSongName = async (trackName: string, artistName: string) => {
       q: `${trackName} ${artistName}`,
     },
   });
-
-  // console.log('Genius API response:', response.data);
-
+  
   const songPath = response.data.response.hits[0]?.result?.path;
+  const apiPath = response.data.response.hits[0]?.result?.api_path;
   if (!songPath) {
     console.warn('No song path found for', trackName, artistName);
-    return null;
+    return { songPath: '', apiPath: ''};
   }
 
-  return songPath;
+  return { songPath, apiPath: apiPath};
 };
 
-const getLyrics = async (trackName: string, artistName: string) => {
-  const songPath = await getSongName(trackName, artistName);
-  if (!songPath) {
+const getSongLanuage = async (api_path: string) => {
+  try{
+    const response = await axios.get(`${corsByPass}/fetch/${geniusAPI}${api_path}`, {
+      headers: {
+        Authorization: `Bearer ${geniusToken}`,
+      }
+    });
+    
+    return response.data.response.song.language || 'en';
+  }
+  catch (error) {
+    console.warn('Error fetching song language:', error);
+    return 'en';
+  }
+};
+
+const getLyrics = async (trackName: string, artistName: string) : Promise<LyricsResponse | null> => {
+  const geniusResponse = await getSongFromSearch(trackName, artistName);
+  if (!geniusResponse.songPath) {
     return null;
   }
-
+  const songLanguage = geniusResponse.apiPath ? await getSongLanuage(geniusResponse.apiPath) : 'en';
+  
   try {
-    const lyricsPage = await axios.get(`${corsByPass}/fetch/${geniusWebPage}${songPath}`);
+    const lyricsPage = await axios.get(`${corsByPass}/fetch/${geniusWebPage}${geniusResponse.songPath}`);
     const $ = cheerio.load(lyricsPage.data);
     const lyrics = $('div.lyrics').text().trim() || $('div[class^="Lyrics__Container"]').text().trim();
     
-    // console.log('Lyrics:', lyrics);
-    return lyrics;
-  } catch (error) {
-    console.error('Error fetching lyrics:', error);
+    return {lyrics, songLanguage};
+  }
+  catch (error) {
+    console.warn('Error fetching lyrics:', error);
     return null;
   }
 };

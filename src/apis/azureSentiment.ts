@@ -1,14 +1,14 @@
 import axios from 'axios';
 
 const endpoint = process.env.REACT_APP_AZURE_SENTIMENT_ENDPOINT;
-const apiKey = process.env.REACT_APP_AZURE_SENTIMENT_API_KEY;
+const apiKey = process.env.REACT_APP_AZURE_SENTIMENT_ENDPOINT_KEY;
 
-export const analyzeSentiment = async (text: string) => {
+export const analyzeSentiment = async (text: string, language: string) => {
   try{
     const response = await axios.post(
       `${endpoint}/text/analytics/v3.0/sentiment`,
       {
-        documents: [{ id: '1', language: 'en', text }],
+        documents: [{ id: '1', language, text }],
       },
       {
         headers: {

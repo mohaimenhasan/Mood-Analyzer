@@ -1,6 +1,6 @@
 // src/App.tsx
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { getTokenFromUrl, getUserData, getUserTopTracks, getUserTopArtists } from './apis/spotifyApi';
 import { analyzeSentiment } from './apis/azureSentiment';
 import { getLyrics } from './apis/lyricsApi';
@@ -35,10 +35,10 @@ const MainApp: React.FC = () => {
       const analyzeTracks = async () => {
         const analysis = await Promise.all(
           topTracks.map(async track => {
-            const lyrics = await getLyrics(track.name, track.artists[0].name);
-            if (!lyrics) return { track: track.name, sentiment: 'unknown' };
+            var lyricsResponse = await getLyrics(track.name, track.artists[0].name);
+            if (!lyricsResponse) return { track: track.name, sentiment: 'unknown' };
 
-            const sentiment = await analyzeSentiment(lyrics);
+            const sentiment = await analyzeSentiment(lyricsResponse.lyrics, lyricsResponse.songLanguage);
             return { track: track.name, sentiment };
           })
         );
@@ -81,6 +81,7 @@ const App: React.FC = () => (
     <Routes>
       <Route path="/callback" element={<Callback />} />
       <Route path="/" element={<MainApp />} />
+      <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   </Router>
 );
