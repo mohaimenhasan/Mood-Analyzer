@@ -22,6 +22,7 @@ const getSongFromSearch = async (trackName: string, artistName: string): Promise
     headers: {
       Authorization: `Bearer ${geniusToken}`,
       "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Credentials": true
     },
     params: {
       q: `${trackName} ${artistName}`,
@@ -44,6 +45,7 @@ const getSongLanuage = async (api_path: string) => {
       headers: {
         Authorization: `Bearer ${geniusToken}`,
         "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true
       }
     });
 
@@ -66,6 +68,7 @@ const getLyrics = async (trackName: string, artistName: string): Promise<LyricsR
     const lyricsPage = await axios.get(`${corsByPass}/fetch/${geniusWebPage}${geniusResponse.songPath}`, {
       headers: {
         "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true
       }
     });
     const $ = cheerio.load(lyricsPage.data);
