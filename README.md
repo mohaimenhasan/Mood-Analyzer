@@ -43,6 +43,7 @@ REACT_APP_AZURE_SENTIMENT_ENDPOINT_KEY=your_azure_key
 REACT_APP_SPOTIFY_CLIENT_ID=your_spotify_client_id
 REACT_APP_SPOTIFY_REDIRECT_URI=your_spotify_redirect_uri
 GENERATE_SOURCEMAP=false
+REACT_APP_BYPASS_CORS=https://thingproxy.freeboard.io // change this to your cors bypasser
 ```
 
 ## Usage
