@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getTokenFromUrl, getUserData, getUserTopTracks, getUserTopArtists } from './apis/spotifyApi';
+import { analyzeSentiment } from './apis/azureSentiment';
+import { getLyrics } from './apis/lyricsApi';
 import TopTracksChart from './components/TopTracksChart';
 import Login from './components/Login';
 import './App.css';
@@ -9,6 +11,7 @@ const App: React.FC = () => {
   const [user, setUser] = useState<any>(null);
   const [topTracks, setTopTracks] = useState<any[]>([]);
   const [topArtists, setTopArtists] = useState<any[]>([]);
+  const [moodAnalysis, setMoodAnalysis] = useState<any[]>([]);
 
   useEffect(() => {
     const hash = getTokenFromUrl();
@@ -23,6 +26,25 @@ const App: React.FC = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (topTracks.length > 0) {
+      const analyzeTracks = async () => {
+        const analysis = await Promise.all(
+          topTracks.map(async track => {
+            const lyrics = await getLyrics(track.name, track.artists[0].name);
+            if (!lyrics) return { track: track.name, sentiment: 'unknown' };
+
+            const sentiment = await analyzeSentiment(lyrics);
+            return { track: track.name, sentiment };
+          })
+        );
+        setMoodAnalysis(analysis);
+      };
+
+      analyzeTracks();
+    }
+  }, [topTracks]);
+
   return (
     <div className="App">
       {!token ? (
@@ -36,6 +58,12 @@ const App: React.FC = () => {
           <ul>
             {topArtists.map(artist => (
               <li key={artist.id}>{artist.name}</li>
+            ))}
+          </ul>
+          <h2>Mood Analysis</h2>
+          <ul>
+            {moodAnalysis.map(({ track, sentiment }) => (
+              <li key={track}>{track}: {sentiment}</li>
             ))}
           </ul>
         </div>

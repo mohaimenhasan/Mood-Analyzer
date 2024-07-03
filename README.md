@@ -1,46 +1,101 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Spotify Mood Analyzer
 
-## Available Scripts
+## Overview
 
-In the project directory, you can run:
+The Spotify Mood Analyzer is a React application that connects to the Spotify API to fetch a user's top tracks and artists. It performs sentiment analysis on the lyrics of the top tracks using the Azure Sentiment API and displays the results in a user-friendly interface.
 
-### `npm start`
+## Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- User Authentication with Spotify
+- Fetch and display user's top tracks and artists
+- Perform sentiment analysis on top tracks' lyrics using Azure Sentiment API
+- Display sentiment analysis results
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Prerequisites
 
-### `npm test`
+- Node.js and npm installed
+- Spotify Developer account with client credentials
+- Azure account for sentiment analysis
+- Lyrics API access
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Installation
 
-### `npm run build`
+1. Clone the repository:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+git clone https://github.com/mohaimenhasan/Mood-Analyzer.git
+cd Mood-Analyzer
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+2. Install the dependencies:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+npm install
+```
 
-### `npm run eject`
+3. Create a `.env` file in the root directory and add your Spotify, Azure, and Lyrics API credentials:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+```bash
+REACT_APP_GENIUS_API_TOKEN=your_lyrics_api_key
+REACT_APP_AZURE_SENTIMENT_ENDPOINT=your_azure_endpoint
+REACT_APP_AZURE_SENTIMENT_ENDPOINT_KEY=your_azure_key
+REACT_APP_SPOTIFY_CLIENT_ID=your_spotify_client_id
+REACT_APP_SPOTIFY_REDIRECT_URI=your_spotify_redirect_uri
+GENERATE_SOURCEMAP=false
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Usage
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+1. Start the development server:
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+```bash
+npm start
+```
 
-## Learn More
+2. Open your browser and navigate to `http://localhost:3000`.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+3. Log in with your Spotify account.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+4. View your top tracks, top artists, and mood analysis results.
+
+## Project Structure
+
+```
+src/
+│
+├── apis/
+│   ├── azureSentiment.ts
+│   ├── lyricsApi.ts
+│   └── spotifyApi.ts
+│
+├── components/
+│   ├── Login.tsx
+│   └── TopTracksChart.tsx
+│
+├── App.css
+├── App.tsx
+├── index.css
+├── index.tsx
+│
+├── ...
+```
+
+## API Endpoints
+
+- **Spotify API**: Fetches user data, top tracks, and top artists.
+- **Azure Sentiment API**: Analyzes sentiment of lyrics.
+- **Lyrics API**: Retrieves lyrics for tracks.
+
+## Important Files
+
+- `App.tsx`: Main component that handles authentication, data fetching, and rendering.
+- `spotifyApi.ts`: Contains functions to interact with Spotify API.
+- `azureSentiment.ts`: Contains function to interact with Azure Sentiment API.
+- `lyricsApi.ts`: Contains function to interact with Lyrics API.
+- `TopTracksChart.tsx`: Component to display top tracks in a chart.
+- `Login.tsx`: Component for user authentication with Spotify.
+
+## License
+
+This project is licensed under the MIT License.

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const CLIENT_ID = 'cdcef14f6ccb4375887f6154ab49b19f';
-const REDIRECT_URI = 'http://localhost:3000/callback';
+const CLIENT_ID = process.env.REACT_APP_SPOTIFY_CLIENT_ID;
+const REDIRECT_URI = process.env.REACT_APP_SPOTIFY_REDIRECT_URI;
 const AUTH_ENDPOINT = 'https://accounts.spotify.com/authorize';
 const RESPONSE_TYPE = 'token';
 
