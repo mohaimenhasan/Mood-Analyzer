@@ -18,8 +18,9 @@ interface GeniusResponse {
 }
 
 const getSongFromSearch = async (trackName: string, artistName: string): Promise<GeniusResponse> => {
-  const response = await axios.get(`${corsByPass}/fetch/${geniusAPI}/search?q=${trackName} ${artistName}&access_token=${geniusToken}`, {
+  const response = await axios.get(`${corsByPass}/fetch/${geniusAPI}/search`, {
     headers: {
+      Authorization: `Bearer ${geniusToken}`,
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Credentials": true
     },
@@ -40,8 +41,9 @@ const getSongFromSearch = async (trackName: string, artistName: string): Promise
 
 const getSongLanuage = async (api_path: string) => {
   try {
-    const response = await axios.get(`${corsByPass}/fetch/${geniusAPI}${api_path}&access_token=${geniusToken}`, {
+    const response = await axios.get(`${corsByPass}/fetch/${geniusAPI}${api_path}`, {
       headers: {
+        Authorization: `Bearer ${geniusToken}`,
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Credentials": true
       }
