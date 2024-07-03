@@ -1,3 +1,4 @@
+// src/App.tsx
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { getTokenFromUrl, getUserData, getUserTopTracks, getUserTopArtists } from './apis/spotifyApi';
@@ -17,24 +18,45 @@ const MainApp: React.FC = () => {
 
   useEffect(() => {
     const tokenFromStorage = localStorage.getItem('spotifyToken');
+    const tokenExpiration = localStorage.getItem('spotifyTokenExpiration');
     const hash = getTokenFromUrl();
     window.location.hash = '';
-    const _token = hash.access_token || tokenFromStorage;
+    const _token = hash.access_token;
 
     if (_token) {
+      // If we have a new token, set it and store the expiration time
+      const _expires_in = hash.expires_in;
+      const expirationTime = new Date().getTime() + _expires_in * 1000;
+      localStorage.setItem('spotifyToken', _token);
+      localStorage.setItem('spotifyTokenExpiration', expirationTime.toString());
       setToken(_token);
-      getUserData(_token).then(setUser);
-      getUserTopTracks(_token).then(data => setTopTracks(data.items));
-      getUserTopArtists(_token).then(data => setTopArtists(data.items));
+    } else if (tokenFromStorage && tokenExpiration) {
+      // Check if the stored token has expired
+      const expirationTime = parseInt(tokenExpiration);
+      if (new Date().getTime() < expirationTime) {
+        setToken(tokenFromStorage);
+      } else {
+        // Token has expired
+        localStorage.removeItem('spotifyToken');
+        localStorage.removeItem('spotifyTokenExpiration');
+      }
     }
   }, []);
+
+  useEffect(() => {
+    if (token) {
+      getUserData(token).then(setUser);
+      getUserTopTracks(token).then(data => setTopTracks(data.items));
+      getUserTopArtists(token).then(data => setTopArtists(data.items));
+    }
+  }, [token]);
 
   useEffect(() => {
     if (topTracks.length > 0) {
       const analyzeTracks = async () => {
         const analysis = await Promise.all(
           topTracks.map(async track => {
-            var lyricsResponse = await getLyrics(track.name, track.artists[0].name);
+            const lyricsResponse = await getLyrics(track.name, track.artists[0].name);
             if (!lyricsResponse) return { track: track.name, sentiment: 'unknown' };
 
             const sentiment = await analyzeSentiment(lyricsResponse.lyrics, lyricsResponse.songLanguage);
