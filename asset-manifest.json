@@ -1,0 +1,12 @@
+{
+  "files": {
+    "main.css": "/Mood-Analyzer/static/css/main.9a71fbc5.css",
+    "main.js": "/Mood-Analyzer/static/js/main.69a999a6.js",
+    "static/js/206.2492428e.chunk.js": "/Mood-Analyzer/static/js/206.2492428e.chunk.js",
+    "index.html": "/Mood-Analyzer/index.html"
+  },
+  "entrypoints": [
+    "static/css/main.9a71fbc5.css",
+    "static/js/main.69a999a6.js"
+  ]
+}
