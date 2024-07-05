@@ -7,6 +7,7 @@ import getSongDetails from './apis/azureSongHandlerAPI';
 import { getTokenFromUrl, getUserData, getUserTopArtists, getUserTopTracks } from './apis/spotifyApi';
 import './App.css';
 import Login from './components/Login';
+import SentimentChart from './components/SentimentChart';
 import TopArtistsTable from './components/TopArtistsTable';
 import TopTracksChart from './components/TopTracksChart';
 
@@ -18,6 +19,29 @@ const MainApp: React.FC = () => {
   const [moodAnalysis, setMoodAnalysis] = useState<any[]>([]);
   const [activeTab, setActiveTab] = useState<string>('top-songs');
   const [timeRange, setTimeRange] = useState<string>('medium_term'); // Add state for time range
+  const [sentimentData, setSentimentData] = useState<any>({ short_term: [], medium_term: [], long_term: [] }); // Add state for sentiment data
+
+  const getSongSentiment = async (track: any) => {
+    const cacheKey = `sentiment-${track.id}`;
+    const cachedSentiment = localStorage.getItem(cacheKey);
+    if (cachedSentiment) {
+      return JSON.parse(cachedSentiment);
+    }
+    else {
+      const songDetails = await getSongDetails(track.name, track.artists[0].name);
+      if (!songDetails) {
+        return { track: track.name, sentiment: 'unknown' };
+      }
+
+      const sentiment = await analyzeSentiment(songDetails.songDescription, songDetails.songLanguage);
+      const sentimentAnalysis = {
+        track: track.name,
+        sentiment
+      };
+      localStorage.setItem(cacheKey, JSON.stringify(sentimentAnalysis));
+      return sentimentAnalysis;
+    }
+  };
 
   useEffect(() => {
     const tokenFromStorage = localStorage.getItem('spotifyToken');
@@ -58,24 +82,7 @@ const MainApp: React.FC = () => {
       const analyzeTracks = async () => {
         const analysis = await Promise.all(
           topTracks.map(async track => {
-            const cacheKey = `sentiment-${track.id}`;
-            const cachedSentiment = localStorage.getItem(cacheKey);
-            if (cachedSentiment) {
-              return JSON.parse(cachedSentiment);
-            } else {
-              const songDetails = await getSongDetails(track.name, track.artists[0].name);
-              if (!songDetails) {
-                return { track: track.name, sentiment: 'unknown' };
-              }
-
-              const sentiment = await analyzeSentiment(songDetails.songDescription, songDetails.songLanguage);
-              const sentimentAnalysis = {
-                track: track.name,
-                sentiment
-              };
-              localStorage.setItem(cacheKey, JSON.stringify(sentimentAnalysis));
-              return sentimentAnalysis;
-            }
+            return await getSongSentiment(track);
           })
         );
         setMoodAnalysis(analysis);
@@ -85,12 +92,36 @@ const MainApp: React.FC = () => {
     }
   }, [topTracks]);
 
+  // Fetch sentiment data for all time ranges
+  useEffect(() => {
+    if (token) {
+      const fetchSentimentData = async (range: string) => {
+        const tracks = await getUserTopTracks(token, range);
+        const analysis = await Promise.all(
+          tracks.items.map(async (track: any) => {
+            return await getSongSentiment(track);
+          })
+        );
+        return analysis;
+      };
+
+      const fetchAllSentiments = async () => {
+        const shortTerm = await fetchSentimentData('short_term');
+        const mediumTerm = await fetchSentimentData('medium_term');
+        const longTerm = await fetchSentimentData('long_term');
+        setSentimentData({ short_term: shortTerm, medium_term: mediumTerm, long_term: longTerm });
+      };
+
+      fetchAllSentiments();
+    }
+  }, [token]);
+
   const getSentimentColor = (sentiment: string) => {
     switch (sentiment.toLowerCase()) {
       case 'positive':
-        return '#44cf65';
+        return '#7DDA58';
       case 'negative':
-        return '#e86f79';
+        return '#DE4D4F';
       case 'neutral':
       default:
         return '#e9ecef';
@@ -125,6 +156,13 @@ const MainApp: React.FC = () => {
                 </li>
               ))}
             </ul>
+          </section>
+        );
+      case 'sentiment-chart':
+        return (
+          <section>
+            <h2>Sentiment Over Time</h2>
+            <SentimentChart sentimentData={sentimentData} />
           </section>
         );
       default:
@@ -171,6 +209,12 @@ const MainApp: React.FC = () => {
               onClick={() => setActiveTab('mood-analysis')}
             >
               Mood Analysis
+            </button>
+            <button
+              className={`tab-button ${activeTab === 'sentiment-chart' ? 'active' : ''}`}
+              onClick={() => setActiveTab('sentiment-chart')}
+            >
+              Sentiment Chart
             </button>
           </div>
           {renderTabContent()}

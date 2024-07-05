@@ -1,9 +1,7 @@
-/* src/App.css */
 .App {
   font-family: 'Arial', sans-serif;
   text-align: center;
   background-color: #f8f9fa;
-  padding: 20px;
 }
 
 .container {
@@ -51,6 +49,15 @@ header h1 {
 .tab-button.active {
   background-color: #007bff;
   color: white;
+}
+
+.chart-container {
+  width: 100%;
+  max-width: 1000px;
+  /* Ensure the chart does not shrink */
+  height: 400px;
+  margin: 0 auto;
+  /* Center the chart */
 }
 
 section {
