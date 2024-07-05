@@ -28,7 +28,7 @@ jobs:
           echo "REACT_APP_AZURE_SENTIMENT_ENDPOINT_KEY=${{ secrets.REACT_APP_AZURE_SENTIMENT_ENDPOINT_KEY }}" >> $GITHUB_ENV
           echo "REACT_APP_SPOTIFY_CLIENT_ID=${{ secrets.REACT_APP_SPOTIFY_CLIENT_ID }}" >> $GITHUB_ENV
           echo "REACT_APP_SPOTIFY_REDIRECT_URI=${{ secrets.REACT_APP_SPOTIFY_REDIRECT_URI }}" >> $GITHUB_ENV
-          echo "REACT_APP_BYPASS_CORS=${{ secrets.REACT_APP_BYPASS_CORS }}" >> $GITHUB_ENV
+          echo "REACT_APP_AZURE_SONG_HANDLER=${{ secrets.REACT_APP_AZURE_SONG_HANDLER }}" >> $GITHUB_ENV
 
       - name: Build project
         run: npm run build
@@ -38,7 +38,7 @@ jobs:
           REACT_APP_AZURE_SENTIMENT_ENDPOINT_KEY: ${{ secrets.REACT_APP_AZURE_SENTIMENT_ENDPOINT_KEY }}
           REACT_APP_SPOTIFY_CLIENT_ID: ${{ secrets.REACT_APP_SPOTIFY_CLIENT_ID }}
           REACT_APP_SPOTIFY_REDIRECT_URI: ${{ secrets.REACT_APP_SPOTIFY_REDIRECT_URI }}
-          REACT_APP_BYPASS_CORS: ${{ secrets.REACT_APP_BYPASS_CORS }}
+          REACT_APP_AZURE_SONG_HANDLER: ${{ secrets.REACT_APP_AZURE_SONG_HANDLER }}
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@4.1.5

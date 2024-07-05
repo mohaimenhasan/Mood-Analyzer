@@ -4,7 +4,6 @@ import axios from 'axios';
 const geniusToken = process.env.GENIUS_API_TOKEN;
 
 const geniusAPI = 'https://api.genius.com';
-const geniusWebPage = 'https://genius.com';
 
 interface SongDetailsResponse {
     songDescription: string;

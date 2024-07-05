@@ -5,11 +5,13 @@ interface SongDetails {
     songLanguage: string;
 }
 
+const songDetailsAPI = process.env.REACT_APP_AZURE_SONG_HANDLER;
+
 const getSongDetails = async (trackName: string, artistName: string): Promise<SongDetails | null> => {
     const config = {
         method: 'get',
         maxBodyLength: Infinity,
-        url: `https://songlyricshandler.azurewebsites.net/api/songlyricshandler?trackName=${trackName}&artistName=${artistName}`,
+        url: `${songDetailsAPI}?trackName=${trackName}&artistName=${artistName}`,
         headers: {}
     };
 
