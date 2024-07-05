@@ -1,3 +1,5 @@
+// SpotifyAPI.ts
+
 import axios from 'axios';
 
 const CLIENT_ID = process.env.REACT_APP_SPOTIFY_CLIENT_ID;
@@ -27,8 +29,8 @@ export const getUserData = async (token: string) => {
   return data;
 };
 
-export const getUserTopTracks = async (token: string) => {
-  const { data } = await axios.get('https://api.spotify.com/v1/me/top/tracks?time_range=long_term', {
+export const getUserTopTracks = async (token: string, time_range: string = 'medium_term') => {
+  const { data } = await axios.get(`https://api.spotify.com/v1/me/top/tracks?time_range=${time_range}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -36,8 +38,8 @@ export const getUserTopTracks = async (token: string) => {
   return data;
 };
 
-export const getUserTopArtists = async (token: string) => {
-  const { data } = await axios.get('https://api.spotify.com/v1/me/top/artists', {
+export const getUserTopArtists = async (token: string, time_range: string = 'medium_term') => {
+  const { data } = await axios.get(`https://api.spotify.com/v1/me/top/artists?time_range=${time_range}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

@@ -1,4 +1,5 @@
 // src/App.tsx
+
 import React, { useEffect, useState } from 'react';
 import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { analyzeSentiment } from './apis/azureSentiment';
@@ -16,6 +17,7 @@ const MainApp: React.FC = () => {
   const [topArtists, setTopArtists] = useState<any[]>([]);
   const [moodAnalysis, setMoodAnalysis] = useState<any[]>([]);
   const [activeTab, setActiveTab] = useState<string>('top-songs');
+  const [timeRange, setTimeRange] = useState<string>('medium_term'); // Add state for time range
 
   useEffect(() => {
     const tokenFromStorage = localStorage.getItem('spotifyToken');
@@ -46,10 +48,10 @@ const MainApp: React.FC = () => {
   useEffect(() => {
     if (token) {
       getUserData(token).then(setUser);
-      getUserTopTracks(token).then(data => setTopTracks(data.items));
-      getUserTopArtists(token).then(data => setTopArtists(data.items));
+      getUserTopTracks(token, timeRange).then(data => setTopTracks(data.items)); // Pass timeRange
+      getUserTopArtists(token, timeRange).then(data => setTopArtists(data.items)); // Pass timeRange
     }
-  }, [token]);
+  }, [token, timeRange]); // Add timeRange as a dependency
 
   useEffect(() => {
     if (topTracks.length > 0) {
@@ -86,9 +88,9 @@ const MainApp: React.FC = () => {
   const getSentimentColor = (sentiment: string) => {
     switch (sentiment.toLowerCase()) {
       case 'positive':
-        return '#d4edda';
+        return '#44cf65';
       case 'negative':
-        return '#f8d7da';
+        return '#e86f79';
       case 'neutral':
       default:
         return '#e9ecef';
@@ -139,6 +141,18 @@ const MainApp: React.FC = () => {
           <header>
             <h1>Welcome, {user?.display_name}</h1>
           </header>
+          <div className="time-range-selector">
+            <label htmlFor="time-range">Select Time Range: </label>
+            <select
+              id="time-range"
+              value={timeRange}
+              onChange={(e) => setTimeRange(e.target.value)}
+            >
+              <option value="short_term">Last 4 Weeks</option>
+              <option value="medium_term">Last 6 Months</option>
+              <option value="long_term">Last Year</option>
+            </select>
+          </div>
           <div className="tabs">
             <button
               className={`tab-button ${activeTab === 'top-songs' ? 'active' : ''}`}
