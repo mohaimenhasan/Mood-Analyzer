@@ -28,7 +28,7 @@ export const getUserData = async (token: string) => {
 };
 
 export const getUserTopTracks = async (token: string) => {
-  const { data } = await axios.get('https://api.spotify.com/v1/me/top/tracks', {
+  const { data } = await axios.get('https://api.spotify.com/v1/me/top/tracks?time_range=long_term', {
     headers: {
       Authorization: `Bearer ${token}`,
     },

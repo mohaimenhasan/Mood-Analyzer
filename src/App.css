@@ -1,38 +1,93 @@
+/* src/App.css */
 .App {
+  font-family: 'Arial', sans-serif;
   text-align: center;
+  background-color: #f8f9fa;
+  padding: 20px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+header {
+  margin-bottom: 20px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+header h1 {
+  margin: 0;
+  font-size: 2.5em;
+  color: #333;
+}
+
+section {
+  margin-bottom: 30px;
+}
+
+section h2 {
+  font-size: 2em;
+  margin-bottom: 10px;
+  color: #555;
+}
+
+.top-artists-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+.top-artists-table th,
+.top-artists-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.top-artists-table th {
+  background-color: #f2f2f2;
+}
+
+.top-artists-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.top-artists-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+.mood-analysis {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.mood-analysis li {
+  padding: 15px;
+  margin: 5px 0;
+  border-radius: 4px;
+  text-align: left;
+  color: #333;
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.App-link {
-  color: #61dafb;
+.mood-analysis li.neutral {
+  background-color: #e9ecef;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.mood-analysis li.positive {
+  background-color: #45f06d;
+}
+
+.mood-analysis li.negative {
+  background-color: #e56671;
 }
