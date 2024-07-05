@@ -50,7 +50,7 @@ const SentimentChart: React.FC<SentimentChartProps> = ({ sentimentData }) => {
     const shortTermSentiment = parseSentimentData(sentimentData.short_term);
 
     const chartData = {
-        labels: ['Long Term', 'Medium Term', 'Short Term'],
+        labels: ['1 year', ' 6 months', '4 weeks'],
         datasets: [
             {
                 label: 'Positive Sentiments',

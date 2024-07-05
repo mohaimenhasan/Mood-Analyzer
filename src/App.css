@@ -193,3 +193,10 @@ section h2 {
     font-size: 0.9em;
   }
 }
+
+.spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}

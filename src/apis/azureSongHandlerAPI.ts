@@ -19,7 +19,7 @@ const getSongDetails = async (trackName: string, artistName: string): Promise<So
         const response = await axios.request(config);
         return response.data;
     } catch (error) {
-        console.error(error);
+        console.log(error);
         return null;
     }
 };

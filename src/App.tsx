@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import ClipLoader from 'react-spinners/ClipLoader'; // Import the spinner
 import { analyzeSentiment } from './apis/azureSentiment';
 import getSongDetails from './apis/azureSongHandlerAPI';
 import { getTokenFromUrl, getUserData, getUserTopArtists, getUserTopTracks } from './apis/spotifyApi';
@@ -20,6 +21,7 @@ const MainApp: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('top-songs');
   const [timeRange, setTimeRange] = useState<string>('medium_term'); // Add state for time range
   const [sentimentData, setSentimentData] = useState<any>({ short_term: [], medium_term: [], long_term: [] }); // Add state for sentiment data
+  const [loading, setLoading] = useState<boolean>(false); // Add loading state
 
   const getSongSentiment = async (track: any) => {
     const cacheKey = `sentiment-${track.id}`;
@@ -71,14 +73,25 @@ const MainApp: React.FC = () => {
 
   useEffect(() => {
     if (token) {
-      getUserData(token).then(setUser);
-      getUserTopTracks(token, timeRange).then(data => setTopTracks(data.items)); // Pass timeRange
-      getUserTopArtists(token, timeRange).then(data => setTopArtists(data.items)); // Pass timeRange
+      setLoading(true);
+      getUserData(token).then(data => {
+        setUser(data);
+        setLoading(false);
+      });
+      getUserTopTracks(token, timeRange).then(data => {
+        setTopTracks(data.items);
+        setLoading(false);
+      }); // Pass timeRange
+      getUserTopArtists(token, timeRange).then(data => {
+        setTopArtists(data.items);
+        setLoading(false);
+      }); // Pass timeRange
     }
   }, [token, timeRange]); // Add timeRange as a dependency
 
   useEffect(() => {
     if (topTracks.length > 0) {
+      setLoading(true);
       const analyzeTracks = async () => {
         const analysis = await Promise.all(
           topTracks.map(async track => {
@@ -86,6 +99,7 @@ const MainApp: React.FC = () => {
           })
         );
         setMoodAnalysis(analysis);
+        setLoading(false);
       };
 
       analyzeTracks();
@@ -96,12 +110,14 @@ const MainApp: React.FC = () => {
   useEffect(() => {
     if (token) {
       const fetchSentimentData = async (range: string) => {
+        setLoading(true);
         const tracks = await getUserTopTracks(token, range);
         const analysis = await Promise.all(
           tracks.items.map(async (track: any) => {
             return await getSongSentiment(track);
           })
         );
+        setLoading(false);
         return analysis;
       };
 
@@ -129,6 +145,10 @@ const MainApp: React.FC = () => {
   };
 
   const renderTabContent = () => {
+    if (loading) {
+      return <ClipLoader size={150} color={"#123abc"} loading={loading} />;
+    }
+
     switch (activeTab) {
       case 'top-songs':
         return (
