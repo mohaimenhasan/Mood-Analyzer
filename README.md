@@ -101,6 +101,12 @@ src/
 - \`TopTracksChart.tsx\`: Component to display top tracks in a chart.
 - \`Login.tsx\`: Component for user authentication with Spotify.
 
+## How to contribute to Mood-Analyzer
+
+It is warmly welcomed if you have interest to contribute to Mood-Analyzer.
+
+More details, please refer to [CONTRIBUTION.md](./CONTRIBUTING.md)
+
 ## License
 
 This project is licensed under the MIT License.
