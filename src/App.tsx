@@ -1,12 +1,13 @@
 // src/App.tsx
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-import { getTokenFromUrl, getUserData, getUserTopTracks, getUserTopArtists } from './apis/spotifyApi';
+import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { analyzeSentiment } from './apis/azureSentiment';
-import { getLyrics } from './apis/lyricsApi';
-import TopTracksChart from './components/TopTracksChart';
-import Login from './components/Login';
+import getSongDetails from './apis/azureSongHandlerAPI';
+import { getTokenFromUrl, getUserData, getUserTopArtists, getUserTopTracks } from './apis/spotifyApi';
 import './App.css';
+import Login from './components/Login';
+import TopTracksChart from './components/TopTracksChart';
+
 
 const MainApp: React.FC = () => {
   const [token, setToken] = useState<string | null>(null);
@@ -23,27 +24,25 @@ const MainApp: React.FC = () => {
     const _token = hash.access_token;
 
     if (_token) {
-      console.log("We found an access token from the URL");
-      // If we have a new token, set it and store the expiration time
       const _expires_in = hash.expires_in;
       const expirationTime = new Date().getTime() + _expires_in * 1000;
       localStorage.setItem('spotifyToken', _token);
       localStorage.setItem('spotifyTokenExpiration', expirationTime.toString());
       setToken(_token);
-    } 
+    }
     else if (tokenFromStorage && tokenExpiration) {
-      console.log("We found an access token from local storage");
       // Check if the stored token has expired
       const expirationTime = parseInt(tokenExpiration);
       if (new Date().getTime() < expirationTime) {
         setToken(tokenFromStorage);
-      } else {
+      }
+      else {
         // Token has expired
         localStorage.removeItem('spotifyToken');
         localStorage.removeItem('spotifyTokenExpiration');
       }
     }
-    else{
+    else {
       console.log("No token found");
     }
   }, []);
@@ -61,11 +60,16 @@ const MainApp: React.FC = () => {
       const analyzeTracks = async () => {
         const analysis = await Promise.all(
           topTracks.map(async track => {
-            const lyricsResponse = await getLyrics(track.name, track.artists[0].name);
-            if (!lyricsResponse) return { track: track.name, sentiment: 'unknown' };
+            const songDetails = await getSongDetails(track.name, track.artists[0].name);
+            if (!songDetails) {
+              return { track: track.name, sentiment: 'unknown' };
+            }
 
-            const sentiment = await analyzeSentiment(lyricsResponse.lyrics, lyricsResponse.songLanguage);
-            return { track: track.name, sentiment };
+            const sentiment = await analyzeSentiment(songDetails.songDescription, songDetails.songLanguage);
+            return {
+              track: track.name,
+              sentiment
+            };
           })
         );
         setMoodAnalysis(analysis);
