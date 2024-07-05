@@ -106,9 +106,9 @@ const MainApp: React.FC = () => {
     }
   }, [topTracks]);
 
-  // Fetch sentiment data for all time ranges
+  // Fetch sentiment data for all time ranges only when the active tab is 'sentiment-chart'
   useEffect(() => {
-    if (token) {
+    if (token && activeTab === 'sentiment-chart') {
       const fetchSentimentData = async (range: string) => {
         setLoading(true);
         const tracks = await getUserTopTracks(token, range);
@@ -130,7 +130,7 @@ const MainApp: React.FC = () => {
 
       fetchAllSentiments();
     }
-  }, [token]);
+  }, [token, activeTab]); // Add activeTab as a dependency
 
   const getSentimentColor = (sentiment: string) => {
     switch (sentiment.toLowerCase()) {
