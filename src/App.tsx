@@ -15,6 +15,7 @@ const MainApp: React.FC = () => {
   const [topTracks, setTopTracks] = useState<any[]>([]);
   const [topArtists, setTopArtists] = useState<any[]>([]);
   const [moodAnalysis, setMoodAnalysis] = useState<any[]>([]);
+  const [activeTab, setActiveTab] = useState<string>('top-songs');
 
   useEffect(() => {
     const tokenFromStorage = localStorage.getItem('spotifyToken');
@@ -82,6 +83,53 @@ const MainApp: React.FC = () => {
     }
   }, [topTracks]);
 
+  const getSentimentColor = (sentiment: string) => {
+    switch (sentiment.toLowerCase()) {
+      case 'positive':
+        return '#d4edda';
+      case 'negative':
+        return '#f8d7da';
+      case 'neutral':
+      default:
+        return '#e9ecef';
+    }
+  };
+
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 'top-songs':
+        return (
+          <section>
+            <h2>Your Top Tracks</h2>
+            <TopTracksChart tracks={topTracks} />
+          </section>
+        );
+      case 'top-artists':
+        return (
+          <section>
+            <h2>Your Top Artists</h2>
+            <TopArtistsTable artists={topArtists} />
+          </section>
+        );
+      case 'mood-analysis':
+        return (
+          <section>
+            <h2>Mood Analysis</h2>
+            <ul className="mood-analysis">
+              {moodAnalysis.map(({ track, sentiment }) => (
+                <li key={track} style={{ backgroundColor: getSentimentColor(sentiment) }}>
+                  <span>{track}</span>
+                  <span>{sentiment}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="App">
       {!token ? (
@@ -91,25 +139,27 @@ const MainApp: React.FC = () => {
           <header>
             <h1>Welcome, {user?.display_name}</h1>
           </header>
-          <section>
-            <h2>Your Top Tracks</h2>
-            <TopTracksChart tracks={topTracks} />
-          </section>
-          <section>
-            <h2>Mood Analysis</h2>
-            <ul className="mood-analysis">
-              {moodAnalysis.map(({ track, sentiment }) => (
-                <li key={track} className={sentiment.toLowerCase()}>
-                  <span>{track}</span>
-                  <span>{sentiment}</span>
-                </li>
-              ))}
-            </ul>
-          </section>
-          <section>
-            <h2>Your Top Artists</h2>
-            <TopArtistsTable artists={topArtists} />
-          </section>
+          <div className="tabs">
+            <button
+              className={`tab-button ${activeTab === 'top-songs' ? 'active' : ''}`}
+              onClick={() => setActiveTab('top-songs')}
+            >
+              Top Songs
+            </button>
+            <button
+              className={`tab-button ${activeTab === 'top-artists' ? 'active' : ''}`}
+              onClick={() => setActiveTab('top-artists')}
+            >
+              Top Artists
+            </button>
+            <button
+              className={`tab-button ${activeTab === 'mood-analysis' ? 'active' : ''}`}
+              onClick={() => setActiveTab('mood-analysis')}
+            >
+              Mood Analysis
+            </button>
+          </div>
+          {renderTabContent()}
         </div>
       )}
     </div>

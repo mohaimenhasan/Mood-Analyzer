@@ -1,4 +1,3 @@
-// src/components/TopTracksChart.tsx
 import { BarElement, CategoryScale, Chart as ChartJS, ChartOptions, Legend, LinearScale, Title, Tooltip } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 
@@ -7,7 +6,6 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 interface Track {
   name: string;
   popularity: number;
-  artists: { name: string }[];
 }
 
 interface TopTracksChartProps {
@@ -34,7 +32,7 @@ const TopTracksChart: React.FC<TopTracksChartProps> = ({ tracks }) => {
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        display: false,
+        display: false, // Set to true if you want to display the legend
       },
       title: {
         display: true,
@@ -43,18 +41,17 @@ const TopTracksChart: React.FC<TopTracksChartProps> = ({ tracks }) => {
       tooltip: {
         callbacks: {
           label: function (context) {
-            const track = tracks[context.dataIndex];
-            return `${track.name} by ${track.artists.map(artist => artist.name).join(', ')}: ${context.parsed.y}`;
+            return `${context.label}: ${context.parsed.y}`;
           },
         },
       },
     },
     scales: {
       x: {
-        type: 'category',
+        type: 'category', // Explicitly setting the scale type
       },
       y: {
-        type: 'linear',
+        type: 'linear', // Explicitly setting the scale type
         beginAtZero: true,
         title: {
           display: true,
