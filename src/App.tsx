@@ -74,11 +74,12 @@ const MainApp: React.FC = () => {
               }
 
               const sentiment = await analyzeSentiment(songDetails.songDescription, songDetails.songLanguage);
-              localStorage.setItem(cacheKey, JSON.stringify(sentiment));
-              return {
+              var sentimentAnalysis = {
                 track: track.name,
                 sentiment
               };
+              localStorage.setItem(cacheKey, JSON.stringify(sentimentAnalysis));
+              return sentimentAnalysis;
             }
           })
         );

@@ -1,23 +1,7 @@
-import React from 'react';
+import { BarElement, CategoryScale, Chart as ChartJS, ChartOptions, Legend, LinearScale, Title, Tooltip } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 interface Track {
   name: string;
@@ -29,31 +13,59 @@ interface TopTracksChartProps {
 }
 
 const TopTracksChart: React.FC<TopTracksChartProps> = ({ tracks }) => {
+  const backgroundColors = tracks.map((track, index) => `hsl(${360 / tracks.length * index}, 100%, 70%)`);
+
   const data = {
     labels: tracks.map(track => track.name),
     datasets: [
       {
-        label: 'Top Tracks',
+        label: 'Popularity',
         data: tracks.map(track => track.popularity),
-        backgroundColor: 'rgba(75,192,192,0.6)',
+        backgroundColor: backgroundColors,
+        hoverBackgroundColor: 'rgba(255, 99, 132, 0.6)',
       },
     ],
   };
 
-  const options = {
+  const options: ChartOptions<'bar'> = {
     responsive: true,
     maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false, // Set to true if you want to display the legend
+      },
+      title: {
+        display: true,
+        text: 'Top Tracks Popularity',
+      },
+      tooltip: {
+        callbacks: {
+          label: function (context) {
+            return `${context.label}: ${context.parsed.y}`;
+          },
+        },
+      },
+    },
     scales: {
       x: {
-        beginAtZero: true,
+        type: 'category', // Explicitly setting the scale type
       },
       y: {
+        type: 'linear', // Explicitly setting the scale type
         beginAtZero: true,
+        title: {
+          display: true,
+          text: 'Popularity Score',
+        },
       },
     },
   };
 
-  return <div style={{ height: '400px' }}><Bar data={data} options={options} /></div>;
+  return (
+    <div style={{ height: '400px' }}>
+      <Bar data={data} options={options} />
+    </div>
+  );
 };
 
 export default TopTracksChart;
