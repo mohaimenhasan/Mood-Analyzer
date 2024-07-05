@@ -60,16 +60,26 @@ const MainApp: React.FC = () => {
       const analyzeTracks = async () => {
         const analysis = await Promise.all(
           topTracks.map(async track => {
-            const songDetails = await getSongDetails(track.name, track.artists[0].name);
-            if (!songDetails) {
-              return { track: track.name, sentiment: 'unknown' };
+            // Use track ID as a unique key for caching
+            const cacheKey = `sentiment-${track.id}`;
+            const cachedSentiment = localStorage.getItem(cacheKey);
+            if (cachedSentiment) {
+              // Parse and return the cached sentiment if available
+              return JSON.parse(cachedSentiment);
             }
+            else {
+              const songDetails = await getSongDetails(track.name, track.artists[0].name);
+              if (!songDetails) {
+                return { track: track.name, sentiment: 'unknown' };
+              }
 
-            const sentiment = await analyzeSentiment(songDetails.songDescription, songDetails.songLanguage);
-            return {
-              track: track.name,
-              sentiment
-            };
+              const sentiment = await analyzeSentiment(songDetails.songDescription, songDetails.songLanguage);
+              localStorage.setItem(cacheKey, JSON.stringify(sentiment));
+              return {
+                track: track.name,
+                sentiment
+              };
+            }
           })
         );
         setMoodAnalysis(analysis);
