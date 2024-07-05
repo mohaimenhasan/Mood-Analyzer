@@ -28,8 +28,7 @@ const MainApp: React.FC = () => {
     const cachedSentiment = localStorage.getItem(cacheKey);
     if (cachedSentiment) {
       return JSON.parse(cachedSentiment);
-    }
-    else {
+    } else {
       const songDetails = await getSongDetails(track.name, track.artists[0].name);
       if (!songDetails) {
         return { track: track.name, sentiment: 'unknown' };
@@ -191,7 +190,7 @@ const MainApp: React.FC = () => {
   };
 
   return (
-    <div className="App">
+    <div className={`App ${token ? 'logged-in' : ''}`}>
       {!token ? (
         <Login />
       ) : (
@@ -237,7 +236,9 @@ const MainApp: React.FC = () => {
               Sentiment Chart
             </button>
           </div>
-          {renderTabContent()}
+          <div >
+            {renderTabContent()}
+          </div>
         </div>
       )}
     </div>

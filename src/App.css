@@ -6,7 +6,6 @@
 
 .container {
   max-width: 1200px;
-  /* Increased max width */
   margin: 0 auto;
   padding: 20px;
   background: white;
@@ -54,10 +53,8 @@ header h1 {
 .chart-container {
   width: 100%;
   max-width: 1000px;
-  /* Ensure the chart does not shrink */
   height: 400px;
   margin: 0 auto;
-  /* Center the chart */
 }
 
 section {
@@ -68,14 +65,6 @@ section h2 {
   font-size: 2em;
   margin-bottom: 10px;
   color: #555;
-}
-
-.chart-container {
-  width: 100%;
-  max-width: 1000px;
-  /* Increased max width */
-  margin: 0 auto;
-  /* Center the chart */
 }
 
 .top-artists-table {
@@ -162,6 +151,23 @@ section h2 {
   box-shadow: 0 0 5px rgba(0, 123, 255, 0.75);
 }
 
+/* New styles for centering content when logged in */
+.logged-in .container {
+  display: flex;
+  flex-direction: column;
+  /* Ensure content is not squished */
+  min-height: 100vh;
+  padding: 40px 20px;
+  /* Add padding to the container */
+}
+
+.spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
 /* Media Queries */
 @media (max-width: 768px) {
   .container {
@@ -192,11 +198,4 @@ section h2 {
     padding: 10px;
     font-size: 0.9em;
   }
-}
-
-.spinner {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
 }
