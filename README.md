@@ -1,6 +1,8 @@
 
 # Spotify Mood Analyzer
 
+[![Deployment Status](https://github.com/mohaimenhasan/Mood-Analyzer/actions/workflows/deploy.yml/badge.svg)](https://github.com/mohaimenhasan/Mood-Analyzer/actions/workflows/deploy.yml)
+
 ## Overview
 
 The Spotify Mood Analyzer is a React application that connects to the Spotify API to fetch a user's top tracks and artists. It performs sentiment analysis on the lyrics of the top tracks using the Azure Sentiment API and displays the results in a user-friendly interface.
@@ -54,7 +56,7 @@ REACT_APP_AZURE_SONG_HANDLER=your_song_handler_to_handle_song
 npm start
 ```
 
-2. Open your browser and navigate to `http://localhost:3000`.
+2. Open your browser and navigate to \`<http://localhost:3000\Mood-Analyzer`>.
 
 3. Log in with your Spotify account.
 
@@ -67,13 +69,15 @@ src/
 │
 ├── apis/
 │   ├── azureSentiment.ts
-│   ├── lyricsApi.ts
+│   ├── azureSongHandler.ts
 │   └── spotifyApi.ts
 │
 ├── components/
 │   ├── Login.tsx
 │   └── TopTracksChart.tsx
-│
+│   └── TopArtistsTable.tsx
+│   └── SentimentChart.tsx
+|
 ├── App.css
 ├── App.tsx
 ├── index.css
@@ -86,16 +90,16 @@ src/
 
 - **Spotify API**: Fetches user data, top tracks, and top artists.
 - **Azure Sentiment API**: Analyzes sentiment of lyrics.
-- **Lyrics API**: Retrieves lyrics for tracks.
+- **Azure SongHandler API**: Retrieves descriptions for tracks.
 
 ## Important Files
 
-- `App.tsx`: Main component that handles authentication, data fetching, and rendering.
-- `spotifyApi.ts`: Contains functions to interact with Spotify API.
-- `azureSentiment.ts`: Contains function to interact with Azure Sentiment API.
-- `lyricsApi.ts`: Contains function to interact with Lyrics API.
-- `TopTracksChart.tsx`: Component to display top tracks in a chart.
-- `Login.tsx`: Component for user authentication with Spotify.
+- \`App.tsx\`: Main component that handles authentication, data fetching, and rendering.
+- \`spotifyApi.ts\`: Contains functions to interact with Spotify API.
+- \`azureSentiment.ts\`: Contains function to interact with Azure Sentiment API.
+- \`lyricsApi.ts\`: Contains function to interact with Lyrics API.
+- \`TopTracksChart.tsx\`: Component to display top tracks in a chart.
+- \`Login.tsx\`: Component for user authentication with Spotify.
 
 ## License
 
