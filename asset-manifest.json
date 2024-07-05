@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/Mood-Analyzer/static/css/main.f855e6bc.css",
-    "main.js": "/Mood-Analyzer/static/js/main.dd32b649.js",
+    "main.js": "/Mood-Analyzer/static/js/main.940ee1e8.js",
     "static/js/453.76f542c0.chunk.js": "/Mood-Analyzer/static/js/453.76f542c0.chunk.js",
     "index.html": "/Mood-Analyzer/index.html",
     "main.f855e6bc.css.map": "/Mood-Analyzer/static/css/main.f855e6bc.css.map",
-    "main.dd32b649.js.map": "/Mood-Analyzer/static/js/main.dd32b649.js.map",
+    "main.940ee1e8.js.map": "/Mood-Analyzer/static/js/main.940ee1e8.js.map",
     "453.76f542c0.chunk.js.map": "/Mood-Analyzer/static/js/453.76f542c0.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.f855e6bc.css",
-    "static/js/main.dd32b649.js"
+    "static/js/main.940ee1e8.js"
   ]
 }
