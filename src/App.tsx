@@ -1,5 +1,3 @@
-// src/App.tsx
-
 import React, { useEffect, useState } from 'react';
 import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import ClipLoader from 'react-spinners/ClipLoader'; // Import the spinner
@@ -11,6 +9,7 @@ import Login from './components/Login';
 import SentimentChart from './components/SentimentChart';
 import TopArtistsTable from './components/TopArtistsTable';
 import TopTracksChart from './components/TopTracksChart';
+import SentimentDetailModal from './components/SentimentDetailModal';
 
 const MainApp: React.FC = () => {
   const [token, setToken] = useState<string | null>(null);
@@ -22,6 +21,8 @@ const MainApp: React.FC = () => {
   const [timeRange, setTimeRange] = useState<string>('medium_term'); // Add state for time range
   const [sentimentData, setSentimentData] = useState<any>({ short_term: [], medium_term: [], long_term: [] }); // Add state for sentiment data
   const [loading, setLoading] = useState<boolean>(false); // Add loading state
+  const [selectedSong, setSelectedSong] = useState<any>(null); // Add state for selected song
+  const [showModal, setShowModal] = useState<boolean>(false); // State for modal visibility
 
   const getSongSentiment = async (track: any) => {
     const cacheKey = `sentiment-${track.id}`;
@@ -31,13 +32,19 @@ const MainApp: React.FC = () => {
     } else {
       const songDetails = await getSongDetails(track.name, track.artists[0].name);
       if (!songDetails) {
-        return { track: track.name, sentiment: 'unknown' };
+        return { track: track.name, sentiment: 'unknown', scores: {}, sentences: [] };
       }
 
       const sentiment = await analyzeSentiment(songDetails.songDescription, songDetails.songLanguage);
+      if (!sentiment) {
+        return { track: track.name, sentiment: 'unknown', scores: {}, sentences: [] };
+      }
       const sentimentAnalysis = {
         track: track.name,
-        sentiment
+        artists: track.artists,
+        sentiment: sentiment.sentiment,
+        scores: sentiment.confidenceScores,
+        sentences: sentiment.sentences
       };
       localStorage.setItem(cacheKey, JSON.stringify(sentimentAnalysis));
       return sentimentAnalysis;
@@ -143,6 +150,16 @@ const MainApp: React.FC = () => {
     }
   };
 
+  const handleSongClick = (song: any) => {
+    setSelectedSong(song);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setSelectedSong(null);
+  };
+
   const renderTabContent = () => {
     if (loading) {
       return <ClipLoader size={150} color={"#123abc"} loading={loading} />;
@@ -168,10 +185,16 @@ const MainApp: React.FC = () => {
           <section>
             <h2>Mood Analysis</h2>
             <ul className="mood-analysis">
-              {moodAnalysis.map(({ track, sentiment }) => (
-                <li key={track} style={{ backgroundColor: getSentimentColor(sentiment) }}>
-                  <span>{track}</span>
-                  <span>{sentiment}</span>
+              {moodAnalysis.map((song) => (
+                <li 
+                  key={song.track} 
+                  style={{ backgroundColor: getSentimentColor(song.sentiment) }}
+                  onClick={() => handleSongClick(song)} // Set selected song on click
+                >
+                  <span><b>Song: {song.track}</b></span>
+                  <span><i>Artists: {song.artists.map((artist: { name: any; }) => artist.name).join(", ")} </i></span>
+                  <span>{song.sentiment}</span>
+                  <span>Scores: Positive - {song.scores.positive.toFixed(2)}, Neutral - {song.scores.neutral.toFixed(2)}, Negative - {song.scores.negative.toFixed(2)}</span>
                 </li>
               ))}
             </ul>
@@ -236,11 +259,12 @@ const MainApp: React.FC = () => {
               Sentiment Chart
             </button>
           </div>
-          <div >
+          <div>
             {renderTabContent()}
           </div>
         </div>
       )}
+      <SentimentDetailModal show={showModal} handleClose={handleCloseModal} song={selectedSong} />
     </div>
   );
 };
