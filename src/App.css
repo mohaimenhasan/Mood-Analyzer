@@ -104,12 +104,23 @@ section h2 {
   padding: 15px;
   margin: 5px 0;
   border-radius: 4px;
-  text-align: left;
+  text-align: center; /* Center the text */
   color: #333;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column; /* Stack the items vertically */
+  align-items: center; /* Center the items horizontally */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer; /* Add cursor pointer for click interaction */
+}
+
+.mood-analysis li:hover {
+  background-color: #f1f1f1; /* Add hover effect for better UX */
+}
+
+
+
+.mood-analysis li span {
+  margin: 5px 0; /* Add some margin between the spans */
 }
 
 .mood-analysis li:nth-child(odd) {
@@ -191,11 +202,6 @@ section h2 {
   .top-artists-table th,
   .top-artists-table td {
     padding: 5px;
-    font-size: 0.9em;
-  }
-
-  .mood-analysis li {
-    padding: 10px;
     font-size: 0.9em;
   }
 }
