@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/Mood-Analyzer/static/css/main.564a9824.css",
-    "main.js": "/Mood-Analyzer/static/js/main.b60b67f6.js",
-    "static/js/453.76f542c0.chunk.js": "/Mood-Analyzer/static/js/453.76f542c0.chunk.js",
+    "main.css": "/Mood-Analyzer/static/css/main.ec8f0e84.css",
+    "main.js": "/Mood-Analyzer/static/js/main.744e6158.js",
+    "static/js/453.2ee8e9d9.chunk.js": "/Mood-Analyzer/static/js/453.2ee8e9d9.chunk.js",
     "index.html": "/Mood-Analyzer/index.html",
-    "main.564a9824.css.map": "/Mood-Analyzer/static/css/main.564a9824.css.map",
-    "main.b60b67f6.js.map": "/Mood-Analyzer/static/js/main.b60b67f6.js.map",
-    "453.76f542c0.chunk.js.map": "/Mood-Analyzer/static/js/453.76f542c0.chunk.js.map"
+    "main.ec8f0e84.css.map": "/Mood-Analyzer/static/css/main.ec8f0e84.css.map",
+    "main.744e6158.js.map": "/Mood-Analyzer/static/js/main.744e6158.js.map",
+    "453.2ee8e9d9.chunk.js.map": "/Mood-Analyzer/static/js/453.2ee8e9d9.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.564a9824.css",
-    "static/js/main.b60b67f6.js"
+    "static/css/main.ec8f0e84.css",
+    "static/js/main.744e6158.js"
   ]
 }
