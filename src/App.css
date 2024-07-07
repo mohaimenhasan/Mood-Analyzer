@@ -114,10 +114,8 @@ section h2 {
 }
 
 .mood-analysis li:hover {
-  background-color: #f1f1f1; /* Add hover effect for better UX */
+  background-color: #f0e68c !important; /* Use !important to force the rule */
 }
-
-
 
 .mood-analysis li span {
   margin: 5px 0; /* Add some margin between the spans */
