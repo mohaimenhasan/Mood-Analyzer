@@ -194,7 +194,7 @@ const MainApp: React.FC = () => {
                   <span><b>Song: {song.track}</b></span>
                   <span><i>Artists: {song.artists.map((artist: { name: any; }) => artist.name).join(", ")} </i></span>
                   <span>{song.sentiment}</span>
-                  <span>Scores: Positive - {song.scores.positive.toFixed(2)}, Neutral - {song.scores.neutral.toFixed(2)}, Negative - {song.scores.negative.toFixed(2)}</span>
+                  <span>Scores: Positive - {(song.scores.positive*100).toFixed(1)}%, Neutral - {(song.scores.neutral*100).toFixed(1)}%, Negative - {(song.scores.negative*100).toFixed(1)}%</span>
                 </li>
               ))}
             </ul>
